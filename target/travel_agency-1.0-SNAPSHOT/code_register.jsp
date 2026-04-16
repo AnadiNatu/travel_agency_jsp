@@ -1,3 +1,4 @@
+<%@include file="util/db.jsp" %>
 <%@page import="java.sql.*" %>
 <%@page import="org.mindrot.jbcrypt.BCrypt" %>
 
@@ -10,6 +11,21 @@ String age = request.getParameter("age");
 String dob = request.getParameter("dob");
 String role = request.getParameter("role");
 String phone = request.getParameter("phone_number");
+
+if (name == null || email == null || username == null || password == null ||
+    name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+
+    response.sendRedirect("register.jsp?error=missing");
+    return;
+    }
+    
+    try(Connection con = getConnection()){
+    PreparedStatement ps = con.prepareStatement("SELECT id FROM users WHERE username=? or email=?");
+    ps.setString(1, username);
+    ps.setString(2, email);
+    
+    ResultSet rs= ps.executeQuery();
+    }
 
 // Secure password hashing
 //String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());

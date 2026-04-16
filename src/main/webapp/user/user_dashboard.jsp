@@ -1,5 +1,6 @@
 <%@ page import="java.sql.*" %>
 <%@ include file="../auth.jsp" %>
+<%@include file="user_service.jsp"%>
 
 <%
     String authUser = (String) session.getAttribute("authUser");
@@ -33,7 +34,6 @@
             color: white;
         }
 
-        /* Glass Card */
         .glass-card {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 20px;
@@ -43,7 +43,6 @@
             box-shadow: 0 10px 28px rgba(0,0,0,0.20);
         }
 
-        /* Booking Accordion */
         .accordion-button {
             background: rgba(255,255,255,0.2);
             color: white;
@@ -53,30 +52,25 @@
             background: rgba(255,255,255,0.3);
             color: #000;
         }
-
         .section-title {
             font-size: 22px;
             font-weight: 600;
             color: #ffe082;
             margin-bottom: 15px;
         }
-
         .info-label {
             font-weight: 600;
             color: #ffe082;
         }
-
         .info-value {
             font-weight: 400;
             color: #fff;
         }
 
-        /* Buttons */
         .btn-warning {
             font-weight: 600;
             border-radius: 10px;
         }
-
         .profile-img {
             width: 140px;
             height: 140px;
@@ -89,19 +83,13 @@
 
 <body>
 
-<!-- NAVBAR -->
 <%@ include file="user_navbar.jsp" %>
 
 <div class="container py-5">
-
     <div class="row g-4">
-
-        <!-- LEFT PANEL -->
         <div class="col-lg-4 col-md-6">
             <div class="glass-card text-center">
-
                 <img src="../images/default_profile.png" class="profile-img mb-3">
-
                 <h4 class="fw-bold text-white mb-1"><%= authUser %></h4>
                 <p class="text-warning mb-3">
                     <i class="bi bi-person-check-fill"></i> <%= role %>
@@ -129,22 +117,12 @@
 
         <!-- RIGHT PANEL -->
         <div class="col-lg-8">
-
-            <!-- USER DETAILS -->
             <div class="glass-card mb-4">
                 <h5 class="section-title">Your Profile Details</h5>
 
                 <%
                     try {
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        Connection con = DriverManager.getConnection(
-                                "jdbc:mysql://localhost:3306/jakarta_tutorial", "root", "");
-
-                        PreparedStatement ps = con.prepareStatement(
-                                "SELECT name, email, username, phone_number, dob, age FROM users WHERE id=?");
-                        ps.setInt(1, id);
-
-                        ResultSet rs = ps.executeQuery();
+                     ResultSet rs = getUserDetails(id); 
                         if (rs.next()) {
                 %>
 
@@ -163,13 +141,11 @@
                         } else {
                             out.print("<div class='alert alert-warning mt-2'>No user details found.</div>");
                         }
-
-                        rs.close(); ps.close(); con.close();
+//                        rs.close(); ps.close(); con.close();
                     } catch (Exception e) {
                         out.print("<div class='alert alert-danger'>Error: " + e.getMessage() + "</div>");
                     }
                 %>
-
             </div>
 
             <!-- USER BOOKINGS -->
@@ -178,16 +154,8 @@
 
                 <%
                     try {
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        Connection con2 = DriverManager.getConnection(
-                                "jdbc:mysql://localhost:3306/jakarta_tutorial", "root", "");
-
-                        PreparedStatement ps2 = con2.prepareStatement(
-                                "SELECT * FROM trips WHERE user_id=? ORDER BY id DESC");
-                        ps2.setInt(1, id);
-
-                        ResultSet rs2 = ps2.executeQuery();
-
+                       ResultSet rs2 = getUserBookings(id);
+                       
                         if (!rs2.isBeforeFirst()) {
                             out.print("<p class='text-light'>You have no bookings yet.</p>");
                         } else {
@@ -249,7 +217,7 @@
 
                 <%
                         }
-                        rs2.close(); ps2.close(); con2.close();
+//                        rs2.close(); ps2.close(); con2.close();
                     } catch (Exception ex) {
                         out.print("<div class='alert alert-danger'>Error: "+ex.getMessage()+"</div>");
                     }

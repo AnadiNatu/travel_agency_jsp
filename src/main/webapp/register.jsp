@@ -153,6 +153,11 @@
 
         <button type="submit" class="btn btn-warning w-100 mt-2">Register</button>
 
+        <% if ("missing".equals(request.getParameter("error"))) { %>
+    <div class="alert alert-warning text-center py-2">
+        Please fill all required fields!
+    </div>
+<% }%>
     </form>
 
     <p class="text-center mt-3 mb-0">

@@ -81,15 +81,14 @@
 <%@ include file="user_navbar.jsp" %>
 
 <%
-    String tourTitle = request.getParameter("tourTitle");
-    String price = request.getParameter("price");
-    String location = request.getParameter("location");
+String tourTitle = request.getParameter("tourTitle") != null ? request.getParameter("tourTitle") : "N/A";
+String price = request.getParameter("price") != null ? request.getParameter("price") : "0";
+String location = request.getParameter("location") != null ? request.getParameter("location") : "Unknown";
 
-    String country = request.getParameter("country");
-    String city = request.getParameter("city");
-    String zip_code = request.getParameter("zip_code");
-
-    String travelDate = request.getParameter("travel_date");
+String country = request.getParameter("country");
+String city = request.getParameter("city");
+String zip_code = request.getParameter("zip_code");
+String travelDate = request.getParameter("travel_date");
 %>
 
 <div class="container py-5">
