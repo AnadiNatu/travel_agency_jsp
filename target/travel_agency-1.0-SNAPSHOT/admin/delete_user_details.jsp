@@ -1,29 +1,12 @@
 <%@ include file="../auth.jsp" %>
-<%@ page import="java.sql.*" %>
+<%@ include file="admin_service.jsp" %>
+
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%
     int id = Integer.parseInt(request.getParameter("id"));
 
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/jakarta_tutorial", "root", ""
-        );
+deleteUser(id);
 
-        PreparedStatement ps = con.prepareStatement(
-            "DELETE FROM users WHERE id=?"
-        );
-        ps.setInt(1, id);
-        ps.executeUpdate();
-
-        ps.close();
-        con.close();
-
-        response.sendRedirect("user_table.jsp?msg=deleted");
-        return;
-
-    } catch(Exception e) {
-        out.print("<div class='text-danger'>Error deleting user: " + e.getMessage() + "</div>");
-    }
+response.sendRedirect("user_table.jsp?msg=deleted");
 %>

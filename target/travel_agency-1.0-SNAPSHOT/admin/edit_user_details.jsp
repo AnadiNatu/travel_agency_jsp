@@ -1,27 +1,23 @@
-<%@include file="../auth.jsp" %>
-<%@page import="java.sql.*" %>
-<%@page contentType="text/html;charset=UTF-8"%>
+<%@ include file="/auth.jsp" %>
+<%@ include file="admin_service.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 
 <%
 request.setCharacterEncoding("UTF-8");
 
+String roleSession = (String) session.getAttribute("role");
+
+if (!"Admin".equalsIgnoreCase(roleSession)) {
+    response.sendRedirect("../login.jsp?error=unauthorized");
+    return;
+}
+
 int id = Integer.parseInt(request.getParameter("id"));
-String name = "" , email = "" , phone = "" , role = "";
 
-/***********************
-    LOAD USER DETAILS
-***********************/
-try{
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    Connection con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/jakarta_tutorial" , "root" , ""
-    );
+String name = "", email = "", phone = "", role = "";
 
-    PreparedStatement ps = con.prepareStatement(
-        "SELECT name , email , phone_number , role FROM users WHERE id=?"
-    );
-    ps.setInt(1 , id);
-    ResultSet rs = ps.executeQuery();
+try {
+    ResultSet rs = getUserById(id);
 
     if(rs.next()){
         name = rs.getString("name");
@@ -30,50 +26,35 @@ try{
         role = rs.getString("role");
     }
 
-    rs.close();
-    ps.close();
-    con.close();
-}catch(Exception ex){
+} catch(Exception ex){
     out.print("<div class='text-danger'>Error loading user: " + ex.getMessage() + "</div>");
 }
 
-
-/*************************************
-    PROCESS UPDATE ONLY ON POST
-*************************************/
 if ("POST".equalsIgnoreCase(request.getMethod())) {
 
     try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/jakarta_tutorial", "root", ""
+
+        boolean success = updateUser(
+            id,
+            request.getParameter("name"),
+            request.getParameter("email"),
+            request.getParameter("phone"),
+            request.getParameter("role")
         );
 
-        PreparedStatement ps = con.prepareStatement(
-            "UPDATE users SET name=?, email=?, phone_number=?, role=? WHERE id=?"
-        );
-
-        ps.setString(1, request.getParameter("name"));
-        ps.setString(2, request.getParameter("email"));
-        ps.setString(3, request.getParameter("phone"));
-        ps.setString(4, request.getParameter("role"));
-        ps.setInt(5, id);
-
-        ps.executeUpdate();
-        con.close();
-
-        response.sendRedirect("user_table.jsp?msg=updated");
-        return;
+        if (success) {
+            response.sendRedirect("user_table.jsp?msg=updated");
+            return;
+        }
 
     } catch(Exception ex) {
-        out.print("<div class='text-danger'>Update Error: "+ex.getMessage()+"</div>");
+        out.print("<div class='text-danger'>Update Error: " + ex.getMessage() + "</div>");
     }
 }
 %>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Edit User | Admin</title>
@@ -86,7 +67,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 
 <%@ include file="admin_navbar.jsp" %>
 
-<div class="admin-content p-4">
+<div class="container mt-4">
 
     <h3 class="text-warning fw-bold mb-3">
         <i class="bi bi-person-gear"></i> Edit User Details
@@ -96,28 +77,27 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
         <div class="card-body">
 
             <form method="post">
-                <input type="hidden" name="id" value="<%= id %>">
 
                 <div class="mb-3">
-                    <label class="form-label">Full Name</label>
+                    <label>Full Name</label>
                     <input type="text" class="form-control" name="name"
                            value="<%= name %>" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
+                    <label>Email</label>
                     <input type="email" class="form-control" name="email"
                            value="<%= email %>" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Phone Number</label>
+                    <label>Phone</label>
                     <input type="text" class="form-control" name="phone"
                            value="<%= phone %>">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Role</label>
+                    <label>Role</label>
                     <select name="role" class="form-select">
                         <option value="User"  <%= "User".equalsIgnoreCase(role) ? "selected" : "" %>>User</option>
                         <option value="Admin" <%= "Admin".equalsIgnoreCase(role) ? "selected" : "" %>>Admin</option>
@@ -127,11 +107,14 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
                 <button class="btn btn-warning">
                     <i class="bi bi-save"></i> Save Changes
                 </button>
+
                 <a href="user_table.jsp" class="btn btn-secondary ms-2">Back</a>
+
             </form>
 
         </div>
     </div>
+
 </div>
 
 </body>

@@ -1,40 +1,47 @@
 <%@ page import="java.sql.*" %>
 <%@ include file="../auth.jsp" %>
+<%@ include file="user_service.jsp" %>
 
 <%
-    String authUser = (String) session.getAttribute("authUser");
-    Integer userId = (Integer) session.getAttribute("id");
+    request.setCharacterEncoding("UTF-8");
+    
+Integer id = (Integer) session.getAttribute("id");
 
-    if (authUser == null || userId == null) {
-        response.sendRedirect("../login.jsp?error=invalid_session");
-        return;
+if(id == null){
+response.sendRedirect("../login.jsp");
+return;
     }
+    
+String name = "" , email = "" , phone = "";
 
-    String name="", email="", username="", phone="", dob="", age="";
-
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/jakarta_tutorial", "root", "");
-
-        PreparedStatement ps = con.prepareStatement(
-            "SELECT name,email,username,phone_number,dob,age FROM users WHERE id=?");
-        ps.setInt(1, userId);
-
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            name = rs.getString("name");
-            email = rs.getString("email");
-            username = rs.getString("username");
-            phone = rs.getString("phone_number");
-            dob = rs.getString("dob");
-            age = rs.getString("age");
-        }
-
-        rs.close(); ps.close(); con.close();
-
+try{
+ResultSet rs = getUserDetails(id);
+    
+    if(rs.next()){
+    name = rs.getString("name");
+    email = rs.getString("email");
+    phone = rs.getString("phone_number");
+    }
     } catch(Exception ex){
-        out.print("<div class='text-danger'>Error loading profile: " + ex.getMessage() + "</div>");
+    out.print("<div class='text-danger'>Error loading user: " + ex.getMessage() + "</div>");
+}
+
+if("POST".equalsIgnoreCase(request.getMethod())){
+        
+try{
+boolean success = updateUserProfile(
+id ,
+request.getParameter("name"),
+request.getParameter("email"),
+request.getParameter("phone")
+);
+
+if(success){
+    response.sendRedirect("user_dashboard.jsp?msg=updated");
+    }
+    }catch(Exception ex){
+            out.print("<div class='text-danger'>Update Error: "+ex.getMessage()+"</div>");
+    }
     }
 %>
 
@@ -98,8 +105,37 @@
 
 <%@ include file="user_navbar.jsp" %>
 
-<div class="container py-5">
-    <div class="col-lg-6 mx-auto glass-container">
+
+<body class="bg-light">
+
+<div class="container mt-5">
+<h3>Edit Profile</h3>
+
+<form method="post">
+
+<div class="mb-3">
+<label>Name</label>
+<input type="text" class="form-control" name="name" value="<%= name %>" required>
+</div>
+
+<div class="mb-3">
+<label>Email</label>
+<input type="email" class="form-control" name="email" value="<%= email %>" required>
+</div>
+
+<div class="mb-3">
+<label>Phone</label>
+<input type="text" class="form-control" name="phone" value="<%= phone %>">
+</div>
+
+<button class="btn btn-warning">Update</button>
+<a href="user_dashboard.jsp" class="btn btn-secondary">Back</a>
+
+</form>
+
+</div>
+<!--<div class="container py-5">-->
+<!--    <div class="col-lg-6 mx-auto glass-container">
 
         <h3 class="text-center mb-4">
             <i class="bi bi-person-lines-fill"></i> Edit Your Profile
@@ -148,7 +184,7 @@
         </form>
 
     </div>
-</div>
+</div>-->
 
 <%@ include file="user_footer.jsp" %>
 

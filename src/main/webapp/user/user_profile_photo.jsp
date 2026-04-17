@@ -1,142 +1,110 @@
-<%@ page import="java.io.*, java.util.*, com.cloudinary.Cloudinary, com.cloudinary.utils.ObjectUtils,
-                 org.apache.commons.fileupload.*, org.apache.commons.fileupload.disk.*, 
-                 org.apache.commons.fileupload.servlet.*" %>
-<%--<%@ page contentType="text/html;charset=UTF-8" %>--%>
+<%@ include file="../auth.jsp" %>
+<%@ include file="user_service.jsp" %>
+<%@ include file="/config/cloudinary_config.jsp" %>
+
+<%@ page import="java.io.*, java.util.*,
+                 org.apache.commons.fileupload.*, 
+                 org.apache.commons.fileupload.disk.*, 
+                 org.apache.commons.fileupload.servlet.*,
+                 com.cloudinary.*, com.cloudinary.utils.ObjectUtils" %>
 
 <%
-    // --- AUTH CHECK ---
-    Integer id = (Integer) session.getAttribute("id");
-    if (id == null) {
-        response.sendRedirect("../login.jsp?error=loginrequired");
-        return;
-    }
+Integer id = (Integer) session.getAttribute("id");
 
-    // If GET ? show upload UI
-    if (!"POST".equalsIgnoreCase(request.getMethod())) {
+if (id == null) {
+    response.sendRedirect("../login.jsp");
+    return;
+}
+
+if ("delete".equals(request.getParameter("action"))) {
+    deleteProfilePhoto(id);
+    response.sendRedirect("user_dashboard.jsp?photo=deleted");
+    return;
+}
+
+if (!"POST".equalsIgnoreCase(request.getMethod())) {
 %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>Update Profile Photo | Explore Ease</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: url('../images/bg.jpg') center/cover fixed no-repeat;
-            font-family: 'Poppins', sans-serif;
-        }
-        .glass-card {
-            background: rgba(255,255,255,0.20);
-            padding: 35px;
-            border-radius: 18px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.25);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-            max-width: 450px;
-            margin: auto;
-            margin-top: 60px;
-        }
-        .btn-warning {
-            background: #e1a400;
-            border: none;
-        }
-        .btn-warning:hover {
-            background: #c58f00;
-        }
-    </style>
+<title>Upload Photo</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
 
-<%@ include file="user_navbar.jsp" %>
+<div class="container mt-5">
 
-<div class="glass-card">
+<h3>Update Profile Photo</h3>
 
-    <h3 class="fw-bold mb-4 text-dark text-center">Upload Profile Photo</h3>
+<form method="post" enctype="multipart/form-data">
+<input type="file" name="profilePic" class="form-control mb-3" required>
+<button class="btn btn-warning">Upload</button>
+</form>
 
-    <form action="user_profile_photo.jsp" method="post" enctype="multipart/form-data">
-
-        <input type="file"
-               name="profilePic"
-               class="form-control mb-3"
-               accept="image/*"
-               required>
-
-        <button class="btn btn-warning w-100 py-2">Upload Photo</button>
-
-    </form>
+<a href="user_profile_photo.jsp?action=delete" 
+   class="btn btn-danger mt-3"
+   onclick="return confirm('Delete photo?')">
+   Delete Photo
+</a>
 
 </div>
-
-<%--<%@ include file="user_footer.jsp" %>--%>
 
 </body>
 </html>
 
 <%
-        return; // Stop execution here for GET request
+return;
+}
+
+boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+
+if (!isMultipart) {
+    out.print("Invalid request");
+    return;
+}
+
+DiskFileItemFactory factory = new DiskFileItemFactory();
+ServletFileUpload upload = new ServletFileUpload(factory);
+
+try {
+    List<FileItem> items = upload.parseRequest(request);
+    File uploadedFile = null;
+
+    for (FileItem item : items) {
+        if (!item.isFormField()) {
+            String fileName = new File(item.getName()).getName();
+
+            File tempFile = File.createTempFile("upload_", fileName);
+            item.write(tempFile);
+
+            uploadedFile = tempFile;
+        }
     }
 
-    // ----------------------------------------------------------------------------------
-    // --- POST REQUEST ? HANDLE FILE UPLOAD + CLOUDINARY UPLOAD ---
-    // ----------------------------------------------------------------------------------
-
-    boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-    if (!isMultipart) {
-        out.println("<p class='alert alert-danger'>Invalid form submission.</p>");
+    if (uploadedFile == null) {
+        out.print("No file selected");
         return;
     }
 
-    // Step 1: File Upload Preparation
-    DiskFileItemFactory factory = new DiskFileItemFactory();
-    ServletFileUpload upload = new ServletFileUpload(factory);
+    Cloudinary cloudinary = getCloudinary();
 
-    try {
-        List<FileItem> items = upload.parseRequest(request);
-        File uploadedFile = null;
+    Map uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.asMap(
+        "folder", "travel_agency/profile/user/" + id,
+        "public_id", "profile_photo",
+        "overwrite", true
+    ));
 
-        for (FileItem item : items) {
-            if (!item.isFormField()) {
+    String imageUrl = (String) uploadResult.get("secure_url");
 
-                String fileName = new File(item.getName()).getName();
-                String uploadPath = application.getRealPath("") + File.separator + "uploads";
+    updateProfilePhoto(id, imageUrl);
 
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdir();
+    uploadedFile.delete();
 
-                uploadedFile = new File(uploadPath + File.separator + fileName);
-                item.write(uploadedFile);
-            }
-        }
+    response.sendRedirect("user_dashboard.jsp?photo=updated");
 
-        if (uploadedFile == null) {
-            out.println("<p class='alert alert-warning'>No file selected.</p>");
-            return;
-        }
-
-        // Step 2: Upload to Cloudinary (? USE THE SAME CREDENTIALS AS YOUR SAMPLE)
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", "dftemthfs",
-            "api_key", "225645813854764",
-            "api_secret", "kP_FPOscQ8PAolz2rNLsQAPkfL0",
-            "secure", true
-        ));
-
-        Map uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
-        String imageUrl = (String) uploadResult.get("secure_url");
-
-        // Step 3: Save in session (NO DATABASE SAVE)
-        session.setAttribute("profileImageUrl", imageUrl);
-
-        // Remove temporary file
-        uploadedFile.delete();
-
-        // Redirect back
-        response.sendRedirect("user_dashboard.jsp?upload=success");
-
-    } catch (Exception e) {
-        out.println("<p class='alert alert-danger'>Upload failed: " + e.getMessage() + "</p>");
-    }
+} catch(Exception e) {
+    out.print("Upload failed: " + e.getMessage());
+}
 %>

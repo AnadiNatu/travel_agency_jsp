@@ -91,4 +91,119 @@ con.close();
 return row>0;
 }
 
+// Get all users
+public ResultSet getAllUsers() throws Exception{
+Connection con = getConnection();
+
+PreparedStatement ps = con.prepareStatement(
+        "SELECT id, name, email, username, phone_number, role, created_at FROM users ORDER BY id DESC"
+);
+
+return ps.executeQuery();
+}
+
+// delete user
+public boolean deleteUser(int id)throws Exception{
+Connection con = getConnection();
+PreparedStatement ps = con.prepareStatement(
+"DELETE FROM users WHERE id=?"
+);
+
+ps.setInt(1, id);
+int rows = ps.executeUpdate();
+
+ps.close();
+con.close();
+
+return rows>0;
+}
+
+// Get user by ID
+public ResultSet getUserById(int id) throws Exception{
+Connection con = getConnection();
+PreparedStatement ps = con.prepareStatement(
+        "SELECT name, email, phone_number, role FROM users WHERE id=?"
+);
+
+ps.setInt(1, id);
+return ps.executeQuery();
+}
+
+// Update user
+public boolean updateUser(int id , String name , String email , String phone , String role) throws Exception{
+Connection con = getConnection();
+
+PreparedStatement ps = con.prepareStatement(
+"UPDATE users SET name=? , email=? , phone_number=? , role=? WHERE id=?"
+);
+
+ps.setString(1 , name);
+ps.setString(2 , email);
+ps.setString(3, phone);
+ps.setString(4 , role);
+ps.setInt(5 , id);
+
+int rows = ps.executeUpdate();
+
+ps.close();
+con.close();
+
+return rows>0;
+}
+
+// Get booking by id
+public ResultSet getBookingById(int id) throws Exception {
+    Connection con = getConnection();
+
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT tour_title, country, city, zip_code, status, travel_date FROM trips WHERE id=?"
+    );
+
+    ps.setInt(1, id);
+
+    return ps.executeQuery();
+}
+
+// Update booking
+public boolean updateBookingFull(int id, String tourTitle, String country, String city, String zip, String travelDate, String status) throws Exception {
+
+    Connection con = getConnection();
+
+    PreparedStatement ps = con.prepareStatement(
+        "UPDATE trips SET tour_title=?, country=?, city=?, zip_code=?, travel_date=?, status=? WHERE id=?"
+    );
+
+    ps.setString(1, tourTitle);
+    ps.setString(2, country);
+    ps.setString(3, city);
+    ps.setString(4, zip);
+    ps.setString(5, travelDate);
+    ps.setString(6, status);
+    ps.setInt(7, id);
+
+    int rows = ps.executeUpdate();
+
+    ps.close();
+    con.close();
+
+    return rows > 0;
+}
+
+public boolean updateTripImage(int id , String imageUrl) throws Exception{
+Connection con  = getConnection();
+PreparedStatement ps = con.prepareStatement(
+"UPDATE trips SET destination_image=? WHERE id=?"
+);
+
+ps.setString(1 , imageUrl);
+ps.setInt(2 , id);
+
+int rows = ps.executeUpdate();
+
+ps.close();
+con.close();
+
+return rows > 0;
+}
+
 %>

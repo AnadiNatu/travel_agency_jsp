@@ -21,3 +21,9 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+/target/
+
+
+src/main/webapp/config/email_config.jsp
+src/main/webapp/config/cloudinary_config.jsp

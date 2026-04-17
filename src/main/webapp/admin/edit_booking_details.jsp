@@ -1,153 +1,152 @@
 <%@ include file="../auth.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="admin_service.jsp" %>
+<%@ include file="/config/cloudinary_config.jsp" %>
+
+<%@ page import="java.io.*, java.util.*,
+org.apache.commons.fileupload.*,
+org.apache.commons.fileupload.disk.*,
+org.apache.commons.fileupload.servlet.*,
+com.cloudinary.*, com.cloudinary.utils.ObjectUtils" %>
 
 <%
-    request.setCharacterEncoding("UTF-8");
+request.setCharacterEncoding("UTF-8");
 
-    int id = Integer.parseInt(request.getParameter("id"));
-    String tourTitle = "", country = "", city = "", zip = "", status = "", travelDate = "";
+String role = (String) session.getAttribute("role");
+String adminName = (String) session.getAttribute("authUser");
 
-    // Load trip
+if (!"Admin".equalsIgnoreCase(role)) {
+    response.sendRedirect("../login.jsp?error=unauthorized");
+    return;
+}
+
+int id = Integer.parseInt(request.getParameter("id"));
+
+String tourTitle = "", country = "", city = "", zip = "", status = "", travelDate = "", imageUrl = "";
+
+try {
+    ResultSet rs = getBookingById(id);
+
+    if (rs.next()) {
+        tourTitle  = rs.getString("tour_title");
+        country    = rs.getString("country");
+        city       = rs.getString("city");
+        zip        = rs.getString("zip_code");
+        status     = rs.getString("status");
+        travelDate = rs.getString("travel_date");
+        imageUrl   = rs.getString("destination_image");
+    }
+
+} catch(Exception e) {
+    out.print("<div class='text-danger'>Error loading booking</div>");
+}
+
+boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+
+if ("POST".equalsIgnoreCase(request.getMethod()) && isMultipart) {
+
     try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/jakarta_tutorial","root",""
-        );
 
-        PreparedStatement ps = con.prepareStatement(
-            "SELECT tour_title, country, city, zip_code, status, travel_date " +
-            "FROM trips WHERE id=?"
-        );
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
 
-        if (rs.next()) {
-            tourTitle  = rs.getString("tour_title");
-            country    = rs.getString("country");
-            city       = rs.getString("city");
-            zip        = rs.getString("zip_code");
-            status     = rs.getString("status");
-            travelDate = rs.getString("travel_date"); // already yyyy-MM-dd
+        List<FileItem> items = upload.parseRequest(request);
+
+        File uploadedFile = null;
+
+        String newTourTitle = "", newCountry = "", newCity = "", newZip = "", newStatus = "", newDate = "";
+
+        for (FileItem item : items) {
+
+            if (item.isFormField()) {
+                switch(item.getFieldName()) {
+                    case "tour_title": newTourTitle = item.getString(); break;
+                    case "country": newCountry = item.getString(); break;
+                    case "city": newCity = item.getString(); break;
+                    case "zip_code": newZip = item.getString(); break;
+                    case "status": newStatus = item.getString(); break;
+                    case "travel_date": newDate = item.getString(); break;
+                }
+            } else {
+                if (item.getSize() > 0) {
+                    File tempFile = File.createTempFile("upload_", ".jpg");
+                    item.write(tempFile);
+                    uploadedFile = tempFile;
+                }
+            }
         }
 
-        rs.close();
-        ps.close();
-        con.close();
+        updateBookingFull(id, newTourTitle, newCountry, newCity, newZip, newDate, newStatus);
 
-    } catch(Exception e) {
-        out.print("<div class='text-danger'>Error loading booking: "+e.getMessage()+"</div>");
-    }
+        if (uploadedFile != null) {
 
-    // Handle POST
-    if ("POST".equalsIgnoreCase(request.getMethod())) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/jakarta_tutorial","root",""
-            );
+            Cloudinary cloudinary = getCloudinary();
 
-            PreparedStatement ps = con.prepareStatement(
-                "UPDATE trips SET tour_title=?, country=?, city=?, zip_code=?, travel_date=?, status=? WHERE id=?"
-            );
-            ps.setString(1, request.getParameter("tour_title"));
-            ps.setString(2, request.getParameter("country"));
-            ps.setString(3, request.getParameter("city"));
-            ps.setString(4, request.getParameter("zip_code"));
-            ps.setString(5, request.getParameter("travel_date"));
-            ps.setString(6, request.getParameter("status"));
-            ps.setInt(7, id);
+            Map uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.asMap(
+                "folder", "travel_agency/destination/" + adminName + "/" + newCity,
+                "public_id", "destination_image",
+                "overwrite", true
+            ));
 
-            ps.executeUpdate();
-            ps.close();
-            con.close();
+            String uploadedUrl = (String) uploadResult.get("secure_url");
 
-            response.sendRedirect("trip_table.jsp?msg=updated");
-            return;
+            updateTripImage(id, uploadedUrl);
 
-        } catch(Exception ex) {
-            out.print("<div class='text-danger'>Error updating booking: "+ex.getMessage()+"</div>");
+            uploadedFile.delete();
         }
+
+        response.sendRedirect("trip_table.jsp?msg=updated");
+        return;
+
+    } catch(Exception ex) {
+        out.print("<div class='text-danger'>Update failed: " + ex.getMessage() + "</div>");
     }
+}
 %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Trip Booking | Admin</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<title>Edit Trip</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
 
 <%@ include file="admin_navbar.jsp" %>
 
-<div class="admin-content">
-    <div class="container-fluid">
-        <h3 class="text-warning fw-bold mb-3">
-            <i class="bi bi-map"></i> Edit Trip Booking
-        </h3>
+<div class="container mt-4">
 
-        <div class="card shadow-sm">
-            <div class="card-body">
+<h3>Edit Trip Booking</h3>
 
-                <form method="post">
-                    <input type="hidden" name="id" value="<%= id %>"/>
+<div class="card p-4">
 
-                    <div class="mb-3">
-                        <label class="form-label">Tour Title</label>
-                        <input type="text" class="form-control" name="tour_title"
-                               value="<%= tourTitle %>" required>
-                    </div>
+<form method="post" enctype="multipart/form-data">
 
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Country</label>
-                            <input type="text" class="form-control" name="country"
-                                   value="<%= country %>">
-                        </div>
+<input type="text" name="tour_title" class="form-control mb-2" value="<%= tourTitle %>">
+<input type="text" name="country" class="form-control mb-2" value="<%= country %>">
+<input type="text" name="city" class="form-control mb-2" value="<%= city %>">
+<input type="text" name="zip_code" class="form-control mb-2" value="<%= zip %>">
+<input type="date" name="travel_date" class="form-control mb-2" value="<%= travelDate %>">
 
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">City</label>
-                            <input type="text" class="form-control" name="city"
-                                   value="<%= city %>">
-                        </div>
+<select name="status" class="form-control mb-2">
+<option value="PENDING" <%= "PENDING".equals(status)?"selected":"" %>>PENDING</option>
+<option value="CONFIRMED" <%= "CONFIRMED".equals(status)?"selected":"" %>>CONFIRMED</option>
+<option value="CANCELLED" <%= "CANCELLED".equals(status)?"selected":"" %>>CANCELLED</option>
+</select>
 
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Zip Code</label>
-                            <input type="text" class="form-control" name="zip_code"
-                                   value="<%= zip %>">
-                        </div>
-                    </div>
+<% if (imageUrl != null && !imageUrl.isEmpty()) { %>
+<img src="<%= imageUrl %>" width="200" class="mb-3"/>
+<% } %>
 
-                    <div class="mb-3">
-                        <label class="form-label">Travel Date</label>
-                        <input type="date" class="form-control" name="travel_date"
-                               value="<%= travelDate %>">
-                    </div>
+<input type="file" name="image" class="form-control mb-3">
 
-                    <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" name="status">
-                            <option value="PENDING"   <%= "PENDING".equalsIgnoreCase(status)   ? "selected" : "" %>>PENDING</option>
-                            <option value="CONFIRMED" <%= "CONFIRMED".equalsIgnoreCase(status) ? "selected" : "" %>>CONFIRMED</option>
-                            <option value="CANCELLED" <%= "CANCELLED".equalsIgnoreCase(status) ? "selected" : "" %>>CANCELLED</option>
-                        </select>
-                    </div>
+<button class="btn btn-warning">Update</button>
+<a href="trip_table.jsp" class="btn btn-secondary">Back</a>
 
-                    <button class="btn btn-warning">
-                        <i class="bi bi-save"></i> Save Changes
-                    </button>
-                    <a href="trip_table.jsp" class="btn btn-secondary ms-2">Back</a>
+</form>
 
-                </form>
+</div>
 
-            </div>
-        </div>
-    </div>
 </div>
 
 </body>
