@@ -1,150 +1,168 @@
 <%@ include file="../auth.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
-
-<!--<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>User Management | Admin</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <style>
-        body { background: #f8f9fa; font-family: 'Poppins', sans-serif; }
-        .table-container { margin-left: 260px; padding: 20px; }
-        .sidebar {
-            height: 100vh; width: 260px;
-            position: fixed; top: 0; left: 0;
-            background: #343a40; padding-top: 20px;
-        }
-        .sidebar a {
-            display: block; padding: 12px 20px;
-            color: #ddd; text-decoration: none;
-            font-weight: 500;
-        }
-        .sidebar a:hover, .active { background: #ffc107; color: black !important; }
-    </style>
-</head>
-
-<body>
-
-<div class="sidebar">
-    <a href="admin_dashboard.jsp"><i class="bi bi-speedometer2"></i> Dashboard</a>
-    <a class="active" href="user_table.jsp"><i class="bi bi-people"></i> User Management</a>
-    <a href="trip_table.jsp"><i class="bi bi-map"></i> Trip Bookings</a>
-    <hr class="text-light">
-    <a href="../logout.jsp" class="text-danger"><i class="bi bi-power"></i> Logout</a>
-</div>-->
-<!--
-<div class="table-container">
-    <h2 class="fw-bold mb-4">User Management</h2>-->
-
-    <%
-//        Connection con = null;
-//        ResultSet rs = null;
-//
-//        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jakarta_tutorial","root","");
-//            PreparedStatement ps = con.prepareStatement(
-//                "SELECT id, name, email, username, phone_number, role, created_at FROM users ORDER BY id DESC"
-//            );
-//            rs = ps.executeQuery();
-    %>
-
-<!--    <table class="table table-hover table-bordered bg-white shadow-sm">
-        <thead class="table-warning">
-            <tr>
-                <th>ID</th><th>Name</th><th>Email</th><th>Username</th>
-                <th>Phone</th><th>Role</th><th>Created At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody>-->
-        <% 
-//while(rs.next()) { %>
-            <!--<tr>-->
-                <!--<td><%= // rs.getInt("id") %></td>-->
-                <!--<td><%= // rs.getString("name") %></td>-->
-                <!--<td><%= // rs.getString("email") %></td>-->
-                <!--<td><%= // rs.getString("username") %></td>-->
-                <!--<td><%= // rs.getString("phone_number") %></td>-->
-                <!--<td><%= // rs.getString("role") %></td>-->
-                <!--<td><%= // rs.getString("created_at") %></td>-->
-
-<!--                <td>
-                    <a href="edit_user_details.jsp?id=<%= // rs.getInt("id") %>"
-                       class="btn btn-sm btn-primary">
-                        <i class="bi bi-pencil"></i> Edit
-                    </a>
-
-                    <a onclick="return confirm('Delete this user?');"
-                       href="delete_user_details.jsp?id=<%= // rs.getInt("id") %>"
-                       class="btn btn-sm btn-danger">
-                        <i class="bi bi-trash"></i> Delete
-                    </a>
-                </td>
-            </tr>-->
-        <% // } %>
-<!--        </tbody>
-
-    </table>-->
-
-    <% // } catch(Exception ex) { out.print("<div class='text-danger'>"+ex.getMessage()+"</div>"); } %>
-
-<!--</div>
-
-</body>
-</html>-->
-<%@ include file="/auth.jsp" %>
 <%@ include file="admin_service.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 
 <%
 String role = (String) session.getAttribute("role");
 
-if (!"Admin".equalsIgnoreCase(role)) {
+if (role == null || !"Admin".equalsIgnoreCase(role)) {
     response.sendRedirect("../login.jsp?error=unauthorized");
     return;
 }
 %>
 
-<div class="table-container">
-    <h2>User Management</h2>
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Management</title>
 
-    <%
-    try {
-        ResultSet rs = getAllUsers();
-    %>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <table class="table table-bordered">
-        <tr>
-            <th>ID</th><th>Name</th><th>Email</th><th>Username</th>
-            <th>Phone</th><th>Role</th><th>Actions</th>
-        </tr>
+<style>
+body {
+    background: #f5f6fa;
+    font-family: 'Poppins', sans-serif;
+}
 
-        <% while(rs.next()) { %>
-        <tr>
-            <td><%= rs.getInt("id") %></td>
-            <td><%= rs.getString("name") %></td>
-            <td><%= rs.getString("email") %></td>
-            <td><%= rs.getString("username") %></td>
-            <td><%= rs.getString("phone_number") %></td>
-            <td><%= rs.getString("role") %></td>
+.table-card {
+    border-radius: 15px;
+    overflow: hidden;
+}
 
-            <td>
-                <a href="edit_user_details.jsp?id=<%= rs.getInt("id") %>">Edit</a>
-                <a href="delete_user_details.jsp?id=<%= rs.getInt("id") %>">Delete</a>
-            </td>
-        </tr>
+.table thead {
+    background: #343a40;
+    color: white;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    transition: 0.2s;
+}
+
+.badge-role {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.role-admin {
+    background: #ffc107;
+    color: black;
+}
+
+.role-user {
+    background: #0d6efd;
+    color: white;
+}
+
+.action-btn {
+    margin-right: 5px;
+}
+
+.main-content{
+    margin-left: 260px;   /* same as sidebar width */
+    padding: 30px;
+}
+</style>
+
+</head>
+
+<body>
+
+<%@ include file="admin_navbar.jsp" %>
+
+<div class="main-content">
+
+<div class="card shadow table-card p-4">
+
+<h3 class="mb-4 fw-bold text-warning">
+    <i class="bi bi-people"></i> User Management
+</h3>
+
+<div class="table-responsive">
+
+<%
+try {
+    ResultSet rs = getAllUsers();
+%>
+
+<table class="table table-hover align-middle text-center">
+
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Username</th>
+    <th>Phone</th>
+    <th>Role</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+<% while(rs.next()) { %>
+
+<tr>
+    <td><strong>#<%= rs.getInt("id") %></strong></td>
+
+    <td>
+        <i class="bi bi-person-circle me-1"></i>
+        <%= rs.getString("name") %>
+    </td>
+
+    <td><%= rs.getString("email") %></td>
+
+    <td>
+        <span class="text-muted">@<%= rs.getString("username") %></span>
+    </td>
+
+    <td><%= rs.getString("phone_number") %></td>
+
+    <td>
+        <% if("Admin".equalsIgnoreCase(rs.getString("role"))) { %>
+            <span class="badge badge-role role-admin">Admin</span>
+        <% } else { %>
+            <span class="badge badge-role role-user">User</span>
         <% } %>
-         </table>
+    </td>
 
-    <% } catch(Exception e) {
-        out.print(e.getMessage());
-    } %>
+    <td>
+
+        <!-- EDIT BUTTON -->
+        <a href="edit_user_details.jsp?id=<%= rs.getInt("id") %>"
+           class="btn btn-sm btn-primary action-btn">
+            <i class="bi bi-pencil"></i>
+        </a>
+
+        <!-- DELETE BUTTON -->
+        <a href="delete_user_details.jsp?id=<%= rs.getInt("id") %>"
+           onclick="return confirm('Are you sure you want to delete this user?');"
+           class="btn btn-sm btn-danger action-btn">
+            <i class="bi bi-trash"></i>
+        </a>
+
+    </td>
+</tr>
+
+<% } %>
+
+</tbody>
+
+</table>
+
+<%
+} catch(Exception e) {
+    out.print("<div class='alert alert-danger'>" + e.getMessage() + "</div>");
+}
+%>
+
 </div>
+</div>
+
+</div>
+
+</body>
+</html>

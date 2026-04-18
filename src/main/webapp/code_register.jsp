@@ -28,7 +28,7 @@ if (name == null || email == null || username == null || password == null ||
     }
 
 // Secure password hashing
-//String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
 try {
     Class.forName("com.mysql.cj.jdbc.Driver");
@@ -56,7 +56,7 @@ try {
         ps.setString(1, name);
         ps.setString(2, email);
         ps.setString(3, username);
-        ps.setString(4, password);
+        ps.setString(4, hashedPassword);
         ps.setString(5, age);
         ps.setString(6, dob);
         ps.setString(7, role);

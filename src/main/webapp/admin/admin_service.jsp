@@ -206,4 +206,26 @@ con.close();
 return rows > 0;
 }
 
+public boolean createTrip(int userId , String title , String country , String city , String date , String imageUrl) throws Exception{
+
+Connection con = getConnection();
+
+PreparedStatement ps  = con.prepareStatement(
+        "INSERT INTO trips (user_id, tour_title, country, city, travel_date, destination_image, status) VALUES (?, ?, ?, ?, ?, ?, 'PENDING')"
+);
+
+ps.setInt(1 , userId);
+ps.setString(2 , title);
+ps.setString(3 , country);
+ps.setString(4 , city);
+ps.setString(5 , date);
+ps.setString(6 , imageUrl);
+
+int rows = ps.executeUpdate();
+
+ps.close();
+con.close();
+
+return rows>0;
+}
 %>

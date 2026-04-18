@@ -134,58 +134,6 @@ if(success){
 </form>
 
 </div>
-<!--<div class="container py-5">-->
-<!--    <div class="col-lg-6 mx-auto glass-container">
-
-        <h3 class="text-center mb-4">
-            <i class="bi bi-person-lines-fill"></i> Edit Your Profile
-        </h3>
-
-        <form action="code_edit_user.jsp" method="post">
-
-            <input type="hidden" name="id" value="<%= userId %>">
-
-            <div class="mb-3">
-                <label>Full Name</label>
-                <input type="text" name="name" class="form-control" value="<%= name %>" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<%= username %>" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Email</label>
-                <input type="email" name="email" class="form-control" value="<%= email %>" required>
-            </div>
-
-            <div class="mb-3">
-                <label>Phone Number</label>
-                <input type="text" name="phone_number" class="form-control" value="<%= phone %>">
-            </div>
-
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label>Date of Birth</label>
-                    <input type="date" name="dob" class="form-control" value="<%= dob %>">
-                </div>
-
-                <div class="col-md-6">
-                    <label>Age</label>
-                    <input type="number" name="age" class="form-control" value="<%= age %>">
-                </div>
-            </div>
-
-            <button class="btn btn-warning w-100 mt-4">
-                <i class="bi bi-check-circle"></i> Save Changes
-            </button>
-
-        </form>
-
-    </div>
-</div>-->
-
 <%@ include file="user_footer.jsp" %>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

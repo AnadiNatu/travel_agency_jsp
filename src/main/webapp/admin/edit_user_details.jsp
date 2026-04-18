@@ -33,7 +33,7 @@ try {
 if ("POST".equalsIgnoreCase(request.getMethod())) {
 
     try {
-
+        
         boolean success = updateUser(
             id,
             request.getParameter("name"),
@@ -51,6 +51,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
         out.print("<div class='text-danger'>Update Error: " + ex.getMessage() + "</div>");
     }
 }
+
 %>
 
 <!DOCTYPE html>
@@ -61,13 +62,19 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .main-content{
+    margin-left: 260px;   /* same as sidebar width */
+    padding: 30px;
+}
+    </style>
 </head>
 
 <body class="bg-light">
 
 <%@ include file="admin_navbar.jsp" %>
 
-<div class="container mt-4">
+<div class="main-content">
 
     <h3 class="text-warning fw-bold mb-3">
         <i class="bi bi-person-gear"></i> Edit User Details
@@ -78,6 +85,8 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 
             <form method="post">
 
+                <input type="hidden" name="id" value="<%= id %>">        
+                
                 <div class="mb-3">
                     <label>Full Name</label>
                     <input type="text" class="form-control" name="name"
