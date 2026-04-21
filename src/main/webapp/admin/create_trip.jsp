@@ -54,7 +54,8 @@ body {
     <i class="bi bi-plus-circle"></i> Create New Trip
 </h3>
 
-<form action="actions/create_trip_action.jsp" method="post" enctype="multipart/form-data">
+<form action="<%=request.getContextPath()%>/admin/actions/create_trip_action.jsp" 
+      method="post" enctype="multipart/form-data">
 <div class="row">
 
 <div class="col-md-6 mb-3">

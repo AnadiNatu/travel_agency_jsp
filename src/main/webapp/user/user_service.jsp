@@ -102,7 +102,8 @@ public ResultSet getAllDestination() throws Exception{
 Connection con = getConnection();
 
 PreparedStatement ps = con.prepareStatement(
-"SELECT DISTINCT tour_title ,country , city , destination_image , FROM trips WHERE destination_image IS NOT NULL"
+        "SELECT * FROM trips WHERE user_id IS NULL"
+
 );
 
 return ps.executeQuery();

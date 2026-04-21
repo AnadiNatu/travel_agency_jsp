@@ -59,7 +59,7 @@
                 
                 
                     <div class="card-body">
-                        <h5><%= rs.getString("tour_tile")%></h5>
+                        <h5><%= rs.getString("tour_title")%></h5>
                         
                         <p><%= rs.getString("city")%> , <%= rs.getString("tour_title")%></p>
                         

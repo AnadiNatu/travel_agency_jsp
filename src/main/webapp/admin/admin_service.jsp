@@ -53,8 +53,7 @@
 public ResultSet getAllBookings() throws Exception{
 Connection con = getConnection();
 PreparedStatement ps = con.prepareStatement(
- "SELECT id, user_id, tour_title, country, city, zip_code, travel_date, status " +
-        "FROM trips ORDER BY id DESC"
+ "SELECT * FROM trips WHERE user_id IS NOT NULL"
 );
 
 return ps.executeQuery();
@@ -214,7 +213,8 @@ PreparedStatement ps  = con.prepareStatement(
         "INSERT INTO trips (user_id, tour_title, country, city, travel_date, destination_image, status) VALUES (?, ?, ?, ?, ?, ?, 'PENDING')"
 );
 
-ps.setInt(1 , userId);
+    ps.setNull(1, java.sql.Types.INTEGER); // Admin trip NO user
+
 ps.setString(2 , title);
 ps.setString(3 , country);
 ps.setString(4 , city);
@@ -227,5 +227,18 @@ ps.close();
 con.close();
 
 return rows>0;
+}
+
+public ResultSet getAllTrips() throws Exception {
+
+    Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/jakarta_tutorial", "root", ""
+    );
+
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT * FROM trips WHERE user_id IS NULL"
+    );
+
+    return ps.executeQuery();
 }
 %>

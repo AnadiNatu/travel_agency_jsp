@@ -3,66 +3,70 @@
 <%@ include file="/config/email_config.jsp" %>
 
 <%
-    Integer userId = (Integer) session.getAttribute("id");
-    Connection con = getConnection();
-    if (userId == null) {
-        response.sendRedirect("../login.jsp?error=invalid_session");
-        return;
-    }
+Integer userId = (Integer) session.getAttribute("id");
 
-    request.setCharacterEncoding("UTF-8");
-
-    String tourTitle = request.getParameter("tourTitle");
-    String country = request.getParameter("country");
-    String city = request.getParameter("city");
-    String zip = request.getParameter("zip_code");
-    String travelDate = request.getParameter("travel_date");
-
-    // Validation
-    if (tourTitle == null || country == null || city == null || travelDate == null ||
-        tourTitle.isEmpty() || country.isEmpty() || city.isEmpty() || travelDate.isEmpty()) {
-
-        response.sendRedirect("booking_trip.jsp?error=missing_fields");
-        return;
-    }
-
-    try {
-
-        boolean success = createBooking(
-            userId,
-            tourTitle,
-            country,
-            city,
-            zip,
-            travelDate
-        );
-
-        if (success) {
-            response.sendRedirect("user_dashboard.jsp?booking=success");
-        } else {
-            response.sendRedirect("booking_trip.jsp?error=failed");
-        }
-        
-//        Get User Email
-PreparedStatement userPs = con.prepareStatement("SELECT email FROM users WHERE id=?");
-userPs.setInt(1, userId);
-ResultSet userRs = userPs.executeQuery();
-
-String userEmail = "";
-if(userRs.next()){
-userEmail = userRs.getString("email");
+if (userId == null) {
+    response.sendRedirect("../login.jsp?error=invalid_session");
+    return;
 }
 
-String emailMessage = "Hello,\n\n" +
-"Your trip booking is successful!\n\n" +
-"Destination: " + tourTitle + "\n" +
-"Location: " + city + ", " + country + "\n" +
-"Travel Date: " + travelDate + "\n\n" +
-"Thank you for choosing ExploreEase ??";
+request.setCharacterEncoding("UTF-8");
 
-sendEmail(userEmail , "Booking Confirmation - ExploreEase" , emailMessage);
+String tourTitle = request.getParameter("tourTitle");
+String country = request.getParameter("country");
+String city = request.getParameter("city");
+String zip = request.getParameter("zip_code");
+String travelDate = request.getParameter("travel_date");
 
-    } catch (Exception ex) {
-        out.print("<p class='text-danger'>Booking failed: " + ex.getMessage() + "</p>");
+if (tourTitle == null || tourTitle.isEmpty()) {
+    response.sendRedirect("booking_trip.jsp?error=missing");
+    return;
+}
+
+try {
+
+    boolean success = createBooking(userId, tourTitle, country, city, zip, travelDate);
+
+    if (success) {
+
+        Connection con = getConnection();
+
+        PreparedStatement ps = con.prepareStatement(
+            "SELECT name, email FROM users WHERE id=?"
+        );
+
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+
+        String userEmail = "";
+        String userName = "";
+
+        if(rs.next()){
+            userEmail = rs.getString("email");
+            userName = rs.getString("name");
+        }
+
+        String message =
+            "Hi " + userName + ",\n\n" +
+            "Your booking is CONFIRMED!\n\n" +
+            "Trip: " + tourTitle + "\n" +
+            "Location: " + city + ", " + country + "\n" +
+            "Date: " + travelDate + "\n\n" +
+            "Thank you for choosing ExploreEase ??";
+
+        sendEmail(userEmail, "Booking Confirmed - ExploreEase", message);
+
+        rs.close();
+        ps.close();
+        con.close();
+
+        response.sendRedirect("user_dashboard.jsp?booking=success");
+
+    } else {
+        response.sendRedirect("booking_trip.jsp?error=failed");
     }
+
+} catch(Exception e){
+    out.print("<div class='text-danger'>Error: " + e.getMessage() + "</div>");
+}
 %>
