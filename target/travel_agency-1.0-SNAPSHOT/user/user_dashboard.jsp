@@ -12,7 +12,31 @@ if (authUser == null || id == null) {
     return;
 }
 
-String profilePhoto = "../images/default_profile.png";
+String profilePhoto = null;
+
+String name = "", email = "", username = "", phone = "", dob = "";
+int age = 0;
+
+try {
+    ResultSet rs = getUserDetails(id);
+
+    if(rs.next()){
+        name = rs.getString("name");
+        email = rs.getString("email");
+        username = rs.getString("username");
+        phone = rs.getString("phone_number");
+        dob = rs.getString("dob");
+        age = rs.getInt("age");
+
+        String img = rs.getString("profile_photo");
+
+        if(img != null && !img.trim().isEmpty()){
+            profilePhoto = img;
+        }
+    }
+} catch(Exception e){
+    out.print("<div class='text-danger'>" + e.getMessage() + "</div>");
+}
 %>
 
 <!DOCTYPE html>
@@ -73,21 +97,10 @@ if ("success".equals(request.getParameter("booking"))) {
 <div class="col-lg-4">
 <div class="glass-card text-center">
 
-<%
-try {
-    ResultSet rsImg = getUserDetails(id);
-    if(rsImg.next()){
-        String img = rsImg.getString("profile_photo");
-        if(img != null && !img.isEmpty()){
-            profilePhoto = img;
-        }
-    }
-} catch(Exception e){}
-%>
+<img src="<%= (profilePhoto != null && !profilePhoto.isEmpty()) ? profilePhoto : "../images/default_profile.png" %>" 
+     class="profile-img mb-3">
 
-<img src="<%= profilePhoto %>" class="profile-img mb-3">
-
-<h4><%= authUser %></h4>
+<h4><%= name %></h4>
 <p><%= role %></p>
 
 <form action="user_profile_photo.jsp" method="post" enctype="multipart/form-data">
@@ -110,26 +123,12 @@ try {
 <div class="glass-card mb-4">
 <h5>Your Details</h5>
 
-<%
-try {
-ResultSet rs = getUserDetails(id);
-
-if(rs.next()){
-%>
-
-<p><strong>Name:</strong> <%= rs.getString("name") %></p>
-<p><strong>Email:</strong> <%= rs.getString("email") %></p>
-<p><strong>Username:</strong> <%= rs.getString("username") %></p>
-<p><strong>Phone:</strong> <%= rs.getString("phone_number") %></p>
-<p><strong>DOB:</strong> <%= rs.getString("dob") %></p>
-<p><strong>Age:</strong> <%= rs.getInt("age") %></p>
-
-<%
-}
-} catch(Exception e){
-out.print(e.getMessage());
-}
-%>
+<p><strong>Name:</strong> <%= name %></p>
+<p><strong>Email:</strong> <%= email %></p>
+<p><strong>Username:</strong> <%= username %></p>
+<p><strong>Phone:</strong> <%= phone %></p>
+<p><strong>DOB:</strong> <%= dob %></p>
+<p><strong>Age:</strong> <%= age %></p>
 
 </div>
 
