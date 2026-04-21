@@ -20,14 +20,14 @@ try {
         "Type: " + type + "\n\n" +
         "Message:\n" + message;
 
-    // Send email to admin
     sendEmail(adminEmail, subject, fullMessage);
 
-    // OPTIONAL: confirmation to user
-    sendEmail(email, "We received your " + type,
-        "Hi " + name + ",\n\nWe have received your " + type + ". Our team will respond soon.\n\n- ExploreEase");
+    sendEmail(email,
+        "We received your " + type,
+        "Hi " + name + ",\n\nWe received your " + type + ". We'll respond soon.\n\n- ExploreEase"
+    );
 
-    response.sendRedirect("contact.jsp?msg=sent");
+    response.sendRedirect("../contact.jsp?msg=sent");
 
 } catch(Exception e){
     out.print("Error: " + e.getMessage());

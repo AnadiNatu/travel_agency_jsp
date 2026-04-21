@@ -76,7 +76,7 @@ body {
 
 <h4 class="text-warning mb-3">Send Message</h4>
 
-<form action="./action/contact_action.jsp" method="POST">
+<form action="<%= request.getContextPath() %>/user/action/contact_action.jsp" method="POST">
 
 <input type="hidden" name="name" value="<%= name %>">
 <input type="hidden" name="email" value="<%= email %>">
