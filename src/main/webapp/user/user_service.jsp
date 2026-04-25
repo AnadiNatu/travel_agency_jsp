@@ -1,5 +1,5 @@
 <%@page import="java.sql.*" %>
-<%@include file="../util/db.jsp" %>
+<%@include file="../WEB-INF/includes/db.jsp" %>
 
 <%!
     public ResultSet getUserDetails(int userId) throws Exception {

@@ -6,5 +6,5 @@ int id = Integer.parseInt(request.getParameter("id"));
 
 updateBookingStatus(id, "CANCELLED");
 
-response.sendRedirect("trip_table.jsp");
+  response.sendRedirect(request.getContextPath() + "/admin/views/trip_table.jsp?msg=updated");
 %>

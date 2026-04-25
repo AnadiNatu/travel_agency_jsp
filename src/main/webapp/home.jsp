@@ -1,222 +1,143 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="./WEB-INF/includes/db.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Explore Ease | Discover Your Next Adventure</title>
-
-    <!-- Google Fonts + Bootstrap + Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f4f5f7;
-        }
-
-        /* NAVBAR */
-        .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
-        }
-
-        /* HERO */
-        .hero-section {
-            height: 92vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.45)),
-            url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 700;
-            animation: fadeInUp 1s ease forwards;
-        }
-
-        .hero-sub {
-            font-size: 1.3rem;
-            animation: fadeInUp 1.4s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* DESTINATION CARDS */
-        .destination-card {
-            transition: 0.3s ease;
-            border-radius: 12px;
-            overflow: hidden;
-            background: white;
-        }
-
-        .destination-card img {
-            height: 230px;
-            width: 100%;
-            object-fit: cover;
-        }
-
-        .destination-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 26px rgba(0,0,0,0.2);
-        }
-
-        /* FEATURES */
-        .feature-box {
-            background: white;
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
-            transition: 0.3s ease;
-        }
-
-        .feature-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        /* FOOTER */
-        .footer {
-            background: #111;
-            color: #bfbfbf;
-            padding: 25px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Explore Ease | Discover Your Next Adventure</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/global.css">
 </head>
-
 <body>
 
-<!-- 🔹 NAVBAR -->
-<!--<nav class="navbar navbar-expand-lg shadow-sm sticky-top py-3 px-4">
-    <a href="home.jsp" class="navbar-brand fw-bold fs-4 text-warning">ExploreEase</a>
+<!-- NAVBAR -->
+<nav class="ee-nav">
+  <a href="<%=request.getContextPath()%>/home.jsp" class="ee-nav__brand"><i class="bi bi-compass"></i> ExploreEase</a>
+  <ul class="ee-nav__links">
+    <li><a href="<%=request.getContextPath()%>/home.jsp" class="active">Home</a></li>
+    <li><a href="<%=request.getContextPath()%>/public_tour.jsp">Tours</a></li>
+    <li><a href="<%=request.getContextPath()%>/login.jsp" class="ee-nav__cta">Login</a></li>
+    <li><a href="<%=request.getContextPath()%>/register.jsp">Register</a></li>
+  </ul>
+</nav>
 
-    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navMenu">
-
-        <ul class="navbar-nav mx-auto">
-            <li class="nav-item"><a href="home.jsp" class="nav-link active">Home</a></li>
-            <li class="nav-item"><a href="tour.jsp" class="nav-link">Tours</a></li>
-            <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
-            <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
-        </ul>
-
-        <div class="d-flex">
-            <a href="login.jsp" class="btn btn-outline-dark me-2 px-3">Login</a>
-            <a href="register.jsp" class="btn btn-warning px-3 text-dark fw-semibold">Register</a>
-        </div>
-
+<!-- HERO -->
+<section class="ee-hero">
+  <div class="ee-hero__bg" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600');"></div>
+  <div class="ee-hero__overlay"></div>
+  <div class="ee-hero__content">
+    <p class="ee-hero__eyebrow">Premium Travel Experiences</p>
+    <h1 class="ee-hero__title">Adventure <em>Begins</em> Here</h1>
+    <p class="ee-hero__sub">Discover beautiful places, explore new cultures, and plan your dream tour with expert guidance.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="<%=request.getContextPath()%>/public_tour.jsp" class="btn-ee btn-ee--primary">Explore Tours <i class="bi bi-arrow-right"></i></a>
+      <a href="<%=request.getContextPath()%>/register.jsp" class="btn-ee btn-ee--outline">Get Started</a>
     </div>
-</nav>-->
-<%@ include file="public_navbar.jsp" %>
-
-<!-- 🔹 HERO SECTION -->
-<section class="hero-section">
-    <div>
-        <h1 class="hero-title">Adventure Begins Here</h1>
-        <p class="hero-sub">Discover beautiful places, explore new cultures, and plan your dream tour</p>
-        <a href="public_tour.jsp" class="btn btn-warning px-4 py-2 mt-3 fw-semibold">
-            Explore Tours <i class="bi bi-arrow-right-circle ms-1"></i>
-        </a>
-    </div>
+  </div>
 </section>
 
-<!-- 🔹 WHY TRAVEL WITH US -->
-<section class="container py-5">
-    <h2 class="fw-bold text-center mb-4">Why <span class="text-warning">Choose Us?</span></h2>
-
-    <div class="row g-4 text-center">
-
-        <div class="col-md-4">
-            <div class="feature-box">
-                <i class="bi bi-star-fill text-warning fs-2"></i>
-                <h5 class="mt-3">Top Rated Tours</h5>
-                <p class="text-muted">We provide world-class travel packages with top customer satisfaction.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="feature-box">
-                <i class="bi bi-shield-check text-warning fs-2"></i>
-                <h5 class="mt-3">Secure Payments</h5>
-                <p class="text-muted">Safe & secure booking with encrypted payment options.</p>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="feature-box">
-                <i class="bi bi-geo-alt-fill text-warning fs-2"></i>
-                <h5 class="mt-3">Worldwide Coverage</h5>
-                <p class="text-muted">Choose from destinations across the globe with expert guidance.</p>
-            </div>
-        </div>
-
+<!-- WHY US -->
+<section class="ee-section" style="background:var(--white);">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="ee-section__label">Why Choose Us</span>
+      <h2 class="ee-section__title">Travel With <span class="text-gold">Confidence</span></h2>
+      <div class="ee-divider" style="margin:1rem auto 0;"></div>
     </div>
-</section>
-
-<!-- 🔹 POPULAR DESTINATIONS -->
-<section class="container py-5">
-    <h2 class="fw-bold text-center mb-4">
-        Popular <span class="text-warning">Destinations</span>
-    </h2>
-
     <div class="row g-4">
-
-        <!-- Tokyo -->
-        <div class="col-md-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26" alt="Tokyo">
-                <div class="p-3 text-center">
-                    <h5>Tokyo</h5>
-                    <p class="text-muted">$800</p>
-                </div>
-            </div>
+      <div class="col-md-4">
+        <div style="text-align:center;padding:2rem;">
+          <div style="width:64px;height:64px;background:rgba(201,168,76,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.6rem;color:var(--gold);"><i class="bi bi-star-fill"></i></div>
+          <h4>Top Rated Tours</h4>
+          <p style="color:var(--text-mid);font-weight:300;">World-class travel packages with exceptional customer satisfaction and 5-star reviews.</p>
         </div>
-
-        <!-- London -->
-        <div class="col-md-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e" alt="London">
-                <div class="p-3 text-center">
-                    <h5>London</h5>
-                    <p class="text-muted">$1750</p>
-                </div>
-            </div>
+      </div>
+      <div class="col-md-4">
+        <div style="text-align:center;padding:2rem;">
+          <div style="width:64px;height:64px;background:rgba(201,168,76,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.6rem;color:var(--gold);"><i class="bi bi-shield-check"></i></div>
+          <h4>Secure Booking</h4>
+          <p style="color:var(--text-mid);font-weight:300;">Safe and encrypted booking process with full transparency at every step.</p>
         </div>
-
-        <!-- Singapore -->
-        <div class="col-md-4">
-            <div class="destination-card">
-                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Singapore">
-                <div class="p-3 text-center">
-                    <h5>Singapore</h5>
-                    <p class="text-muted">$850</p>
-                </div>
-            </div>
+      </div>
+      <div class="col-md-4">
+        <div style="text-align:center;padding:2rem;">
+          <div style="width:64px;height:64px;background:rgba(201,168,76,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:1.6rem;color:var(--gold);"><i class="bi bi-geo-alt-fill"></i></div>
+          <h4>Worldwide Coverage</h4>
+          <p style="color:var(--text-mid);font-weight:300;">Destinations across the globe curated by our expert travel consultants.</p>
         </div>
-
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- 🔹 FOOTER -->
-<footer class="footer text-center">
-    <p class="mb-0">
-        &copy; <%= java.time.Year.now() %> ExploreEase Travel Agency | All Rights Reserved
-    </p>
+<!-- POPULAR DESTINATIONS -->
+<section class="ee-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="ee-section__label">Where To Go</span>
+      <h2 class="ee-section__title">Popular <span class="text-gold">Destinations</span></h2>
+      <div class="ee-divider" style="margin:1rem auto 0;"></div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="ee-card">
+          <div style="overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600" class="ee-card__img" alt="Tokyo">
+          </div>
+          <div class="ee-card__body">
+            <h5 class="ee-card__title">Tokyo</h5>
+            <p class="ee-card__meta"><i class="bi bi-geo-alt"></i> Japan</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="ee-card__price">$800</span>
+              <a href="<%=request.getContextPath()%>/login.jsp" class="btn-ee btn-ee--primary btn-ee--sm">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="ee-card">
+          <div style="overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600" class="ee-card__img" alt="London">
+          </div>
+          <div class="ee-card__body">
+            <h5 class="ee-card__title">London</h5>
+            <p class="ee-card__meta"><i class="bi bi-geo-alt"></i> United Kingdom</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="ee-card__price">$1,750</span>
+              <a href="<%=request.getContextPath()%>/login.jsp" class="btn-ee btn-ee--primary btn-ee--sm">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="ee-card">
+          <div style="overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600" class="ee-card__img" alt="Bali">
+          </div>
+          <div class="ee-card__body">
+            <h5 class="ee-card__title">Bali</h5>
+            <p class="ee-card__meta"><i class="bi bi-geo-alt"></i> Indonesia</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="ee-card__price">$850</span>
+              <a href="<%=request.getContextPath()%>/login.jsp" class="btn-ee btn-ee--primary btn-ee--sm">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="ee-footer">
+  <div class="container">
+    <p>&copy; <%= java.time.Year.now() %> ExploreEase Travel Agency. All Rights Reserved.</p>
+    <p style="margin-top:0.4rem;"><a href="login.jsp">Login</a> &nbsp;·&nbsp; <a href="register.jsp">Register</a></p>
+  </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

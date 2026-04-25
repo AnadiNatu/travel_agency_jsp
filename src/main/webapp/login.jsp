@@ -1,142 +1,58 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Login | Explore Ease</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            margin: 0;
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.45)),
-                        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80')
-                        center/cover no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 35px 30px;
-            border-radius: 16px;
-            width: 380px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-            color: #fff;
-        }
-
-        .login-card h3 {
-            font-weight: 600;
-        }
-
-        .login-card label {
-            font-weight: 500;
-        }
-
-        .form-control {
-            border-radius: 10px;
-        }
-
-        .btn-login {
-            border-radius: 10px;
-            font-weight: 600;
-            background: #ffc107;
-            border: none;
-            color: #333;
-        }
-
-        .btn-login:hover {
-            background: #ffcf33;
-        }
-
-        a {
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        a:hover {
-            opacity: 0.8;
-        }
-
-        .bottom-links a {
-            color: #ffc107;
-            margin: 5px;
-            display: inline-block;
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <title>Login | Explore Ease</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/global.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-
 <body>
 
-<div class="login-card">
+<div class="login-scene">
+  <div class="login-scene__bg" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600');"></div>
 
-    <h3 class="text-center mb-3">
-        <i class="fa-solid fa-plane-departure text-warning"></i>  
-        Explore Ease Login
-    </h3>
+  <div class="login-scene__panel">
+    <div class="login-card">
+      <div class="login-card__logo"><i class="bi bi-compass"></i> ExploreEase</div>
+      <h2 class="login-card__title">Welcome Back</h2>
+      <p class="login-card__sub">Sign in to continue your journey</p>
 
-    <% 
+      <%
         String error = request.getParameter("error");
         if ("missing".equals(error)) {
-    %>
-        <div class="alert alert-warning py-2">Please enter username & password.</div>
+      %><div class="ee-alert ee-alert--danger">Please enter username &amp; password.</div>
+      <% } else if ("invalid".equals(error)) { %>
+        <div class="ee-alert ee-alert--danger">Invalid credentials. Please try again.</div>
+      <% } else if ("loginrequired".equals(error)) { %>
+        <div class="ee-alert ee-alert--info">Please login to continue.</div>
+      <% } else if ("invalid_session".equals(error)) { %>
+        <div class="ee-alert ee-alert--danger">Session expired. Please login again.</div>
+      <% } %>
 
-    <% } else if ("invalid".equals(error)) { %>
-        <div class="alert alert-danger py-2">Invalid credentials.</div>
-
-    <% } else if ("loginrequired".equals(error)) { %>
-        <div class="alert alert-info py-2">Please login first.</div>
-
-    <% } else if ("invalid_session".equals(error)) { %>
-        <div class="alert alert-danger py-2">Session expired. Please login again.</div>
-
-    <% } %>
-
-    <!-- LOGIN FORM -->
-    <form action="code_login.jsp" method="post" class="mt-3">
-
-        <div class="mb-3">
-            <label><i class="fa-solid fa-user"></i> Username</label>
-            <input name="username" type="text" class="form-control" required>
+      <form action="<%=request.getContextPath()%>/code_login.jsp" method="post">
+        <div class="ee-form-group">
+          <label style="color:rgba(255,255,255,0.6)"><i class="bi bi-person"></i> Username</label>
+          <input name="username" type="text" class="ee-input ee-input--glass" placeholder="your username" required>
         </div>
-
-        <div class="mb-3">
-            <label><i class="fa-solid fa-lock"></i> Password</label>
-            <input name="password" type="password" class="form-control" required>
+        <div class="ee-form-group">
+          <label style="color:rgba(255,255,255,0.6)"><i class="bi bi-lock"></i> Password</label>
+          <input name="password" type="password" class="ee-input ee-input--glass" placeholder="••••••••" required>
         </div>
+        <button type="submit" class="btn-ee btn-ee--primary" style="width:100%;justify-content:center;margin-top:0.5rem;">
+          Sign In <i class="bi bi-arrow-right"></i>
+        </button>
+      </form>
 
-        <button class="btn btn-login w-100 mt-2">Login</button>
-
-    </form>
-
-    <!-- QUICK DEV LINKS (kept but now styled properly) -->
-    <div class="bottom-links text-center mt-4">
-        <a href="home.jsp">Home</a> |
-        <a href="register.jsp">Register</a> |
-        <a href="./user/user_dashboard.jsp">User Dashboard</a> |
-        <a href="./admin/admin_dashboard.jsp">Admin Dashboard</a>
+      <p style="text-align:center;margin-top:1.5rem;color:rgba(255,255,255,0.5);font-size:0.88rem;">
+        No account? <a href="<%=request.getContextPath()%>/register.jsp" style="color:var(--gold-light);">Register here</a>
+      </p>
+      <p style="text-align:center;margin-top:0.5rem;">
+        <a href="<%=request.getContextPath()%>/home.jsp" style="color:rgba(255,255,255,0.4);font-size:0.82rem;">← Back to Home</a>
+      </p>
     </div>
-
-    <p class="text-center mt-3">
-        Don't have an account?  
-        <a href="register.jsp" class="text-warning">Register</a>
-    </p>
-
+  </div>
 </div>
 
 </body>
