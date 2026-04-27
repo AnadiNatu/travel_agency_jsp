@@ -3,6 +3,6 @@
 
 <%
 int id = Integer.parseInt(request.getParameter("id"));
-
-updateBookingStatus(id , "CONFIRMED");
+  updateBookingStatus(id, "CONFIRMED");
+  response.sendRedirect(request.getContextPath() + "/admin/views/trip_table.jsp?msg=updated");
 %>

@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../admin_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%--<%@ page contentType="text/html;charset=UTF-8"%>--%>
 <%
   String role = (String) session.getAttribute("role");
   if (!"Admin".equalsIgnoreCase(role)) {
@@ -13,6 +13,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trip Management | Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +39,9 @@
       <span class="ee-section__label">Admin Created</span>
       <h3 style="margin:0;color:var(--ocean);">Trip Listings</h3>
     </div>
-    <a href="<%=request.getContextPath()%>/admin/views/create_trip.jsp" class="btn-ee btn-ee--primary btn-ee--sm"><i class="bi bi-plus-circle"></i> New Trip</a>
+    <a href="<%=request.getContextPath()%>/admin/views/create_trip.jsp" class="btn-ee btn-ee--primary btn-ee--sm">
+      <i class="bi bi-plus-circle"></i> New Trip
+    </a>
   </div>
 
   <div class="row g-4 mb-5">
@@ -56,10 +59,18 @@
         </div>
         <div class="ee-card__body">
           <h5 class="ee-card__title"><%= trips.getString("tour_title") %></h5>
-          <p class="ee-card__meta"><i class="bi bi-geo-alt-fill text-gold"></i> <%= trips.getString("city") %>, <%= trips.getString("country") %></p>
-          <p style="font-size:0.85rem;color:var(--text-mid);"><i class="bi bi-calendar3"></i> <%= trips.getString("travel_date") %></p>
-          <a href="<%=request.getContextPath()%>/admin/views/edit_booking_details.jsp?id=<%= trips.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="margin-top:0.5rem;"><i class="bi bi-pencil"></i> Edit</a>
-          <a href="<%=request.getContextPath()%>/admin/controllers/delete_booking.jsp?id=<%= trips.getInt("id") %>" onclick="return confirm('Delete this trip?');" class="btn-ee btn-ee--danger btn-ee--sm" style="margin-top:0.5rem;margin-left:0.4rem;"><i class="bi bi-trash"></i></a>
+          <p class="ee-card__meta">
+            <i class="bi bi-geo-alt-fill text-gold"></i> <%= trips.getString("city") %>, <%= trips.getString("country") %>
+          </p>
+          <p style="font-size:0.85rem;color:var(--text-mid);">
+            <i class="bi bi-calendar3"></i> <%= trips.getString("travel_date") %>
+          </p>
+          <a href="<%=request.getContextPath()%>/admin/views/edit_booking_details.jsp?id=<%= trips.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="margin-top:0.5rem;">
+            <i class="bi bi-pencil"></i> Edit
+          </a>
+          <a href="<%=request.getContextPath()%>/admin/controllers/delete_booking.jsp?id=<%= trips.getInt("id") %>" onclick="return confirm('Delete this trip?');" class="btn-ee btn-ee--danger btn-ee--sm" style="margin-top:0.5rem;margin-left:0.4rem;">
+            <i class="bi bi-trash"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -110,11 +121,19 @@
         </td>
         <td style="white-space:nowrap;">
           <% if ("PENDING".equalsIgnoreCase(status)) { %>
-            <a href="<%=request.getContextPath()%>/admin/controllers/approve_booking.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--primary btn-ee--sm" style="display:inline-flex;"><i class="bi bi-check"></i></a>
-            <a href="<%=request.getContextPath()%>/admin/controllers/reject_booking.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="display:inline-flex;margin-left:4px;"><i class="bi bi-x"></i></a>
+            <a href="<%=request.getContextPath()%>/admin/controllers/approve_booking.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--primary btn-ee--sm" style="display:inline-flex;">
+              <i class="bi bi-check"></i>
+            </a>
+            <a href="<%=request.getContextPath()%>/admin/controllers/reject_booking.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="display:inline-flex;margin-left:4px;">
+              <i class="bi bi-x"></i>
+            </a>
           <% } %>
-          <a href="<%=request.getContextPath()%>/admin/views/edit_booking_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--outline btn-ee--sm" style="display:inline-flex;color:var(--ocean);border-color:var(--ocean);margin-left:4px;"><i class="bi bi-pencil"></i></a>
-          <a href="<%=request.getContextPath()%>/admin/controllers/delete_booking.jsp?id=<%= rs.getInt("id") %>" onclick="return confirm('Delete this booking?');" class="btn-ee btn-ee--danger btn-ee--sm" style="display:inline-flex;margin-left:4px;"><i class="bi bi-trash"></i></a>
+          <a href="<%=request.getContextPath()%>/admin/views/edit_booking_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--outline btn-ee--sm" style="display:inline-flex;color:var(--ocean);border-color:var(--ocean);margin-left:4px;">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="<%=request.getContextPath()%>/admin/controllers/delete_booking.jsp?id=<%= rs.getInt("id") %>" onclick="return confirm('Delete this booking?');" class="btn-ee btn-ee--danger btn-ee--sm" style="display:inline-flex;margin-left:4px;">
+            <i class="bi bi-trash"></i>
+          </a>
         </td>
       </tr>
     <% } %>

@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../admin_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" %>--%>
 <%
   String role = (String) session.getAttribute("role");
   if (role == null || !"Admin".equalsIgnoreCase(role)) {
@@ -12,12 +12,15 @@
     userCount = getTotalUsers();
     tripCount = getTotalTrips();
     pending   = getPendingBookings();
-  } catch (Exception e) { /* handled below */ }
+  } catch (Exception e) { 
+    out.println("Error loading stats: " + e.getMessage());
+  }
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard | ExploreEase</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -61,9 +64,15 @@
   <div>
     <h4 style="font-family:'Cormorant Garamond',serif;color:var(--ocean);margin-bottom:1.2rem;">Quick Access</h4>
     <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-      <a href="<%=request.getContextPath()%>/admin/views/user_table.jsp" class="btn-ee btn-ee--ocean"><i class="bi bi-people"></i> Manage Users</a>
-      <a href="<%=request.getContextPath()%>/admin/views/trip_table.jsp" class="btn-ee btn-ee--primary"><i class="bi bi-map"></i> Manage Trips</a>
-      <a href="<%=request.getContextPath()%>/admin/views/create_trip.jsp" class="btn-ee btn-ee--outline" style="color:var(--ocean);border-color:var(--ocean);"><i class="bi bi-plus-circle"></i> Create Trip</a>
+      <a href="<%=request.getContextPath()%>/admin/views/user_table.jsp" class="btn-ee btn-ee--ocean">
+        <i class="bi bi-people"></i> Manage Users
+      </a>
+      <a href="<%=request.getContextPath()%>/admin/views/trip_table.jsp" class="btn-ee btn-ee--primary">
+        <i class="bi bi-map"></i> Manage Trips
+      </a>
+      <a href="<%=request.getContextPath()%>/admin/views/create_trip.jsp" class="btn-ee btn-ee--outline" style="color:var(--ocean);border-color:var(--ocean);">
+        <i class="bi bi-plus-circle"></i> Create Trip
+      </a>
     </div>
   </div>
 </div>

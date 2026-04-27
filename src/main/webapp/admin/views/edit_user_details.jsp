@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../admin_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%--<%@ page contentType="text/html;charset=UTF-8"%>--%>
 <%
   request.setCharacterEncoding("UTF-8");
   String roleSession = (String) session.getAttribute("role");
@@ -40,6 +40,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit User | Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -59,9 +60,18 @@
   <div style="max-width:560px;background:var(--white);border-radius:var(--radius-md);padding:2.5rem;box-shadow:var(--shadow-md);">
     <form method="post">
       <input type="hidden" name="id" value="<%= id %>">
-      <div class="ee-form-group"><label>Full Name</label><input type="text" class="ee-input" name="name" value="<%= name %>" required></div>
-      <div class="ee-form-group"><label>Email</label><input type="email" class="ee-input" name="email" value="<%= email %>" required></div>
-      <div class="ee-form-group"><label>Phone</label><input type="text" class="ee-input" name="phone" value="<%= phone %>"></div>
+      <div class="ee-form-group">
+        <label>Full Name</label>
+        <input type="text" class="ee-input" name="name" value="<%= name %>" required>
+      </div>
+      <div class="ee-form-group">
+        <label>Email</label>
+        <input type="email" class="ee-input" name="email" value="<%= email %>" required>
+      </div>
+      <div class="ee-form-group">
+        <label>Phone</label>
+        <input type="text" class="ee-input" name="phone" value="<%= phone %>">
+      </div>
       <div class="ee-form-group">
         <label>Role</label>
         <select name="role" class="ee-input">
@@ -70,8 +80,12 @@
         </select>
       </div>
       <div style="display:flex;gap:1rem;margin-top:0.5rem;">
-        <button type="submit" class="btn-ee btn-ee--primary"><i class="bi bi-save"></i> Save Changes</button>
-        <a href="<%=request.getContextPath()%>/admin/views/user_table.jsp" class="btn-ee btn-ee--ocean"><i class="bi bi-arrow-left"></i> Back</a>
+        <button type="submit" class="btn-ee btn-ee--primary">
+          <i class="bi bi-save"></i> Save Changes
+        </button>
+        <a href="<%=request.getContextPath()%>/admin/views/user_table.jsp" class="btn-ee btn-ee--ocean">
+          <i class="bi bi-arrow-left"></i> Back
+        </a>
       </div>
     </form>
   </div>

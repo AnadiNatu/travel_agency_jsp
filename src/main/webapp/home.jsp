@@ -1,9 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@include file="./WEB-INF/includes/db.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Explore Ease | Discover Your Next Adventure</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,16 +12,7 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="ee-nav">
-  <a href="<%=request.getContextPath()%>/home.jsp" class="ee-nav__brand"><i class="bi bi-compass"></i> ExploreEase</a>
-  <ul class="ee-nav__links">
-    <li><a href="<%=request.getContextPath()%>/home.jsp" class="active">Home</a></li>
-    <li><a href="<%=request.getContextPath()%>/public_tour.jsp">Tours</a></li>
-    <li><a href="<%=request.getContextPath()%>/login.jsp" class="ee-nav__cta">Login</a></li>
-    <li><a href="<%=request.getContextPath()%>/register.jsp">Register</a></li>
-  </ul>
-</nav>
+<%@ include file="public_navbar.jsp" %>
 
 <!-- HERO -->
 <section class="ee-hero">

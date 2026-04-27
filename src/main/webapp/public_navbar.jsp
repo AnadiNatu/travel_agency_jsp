@@ -1,107 +1,124 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<!-- Bootstrap + Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
 <style>
-    body {
-            font-family: 'Poppins', sans-serif;
-            background: #f4f5f7;
-        }
+.ee-navbar {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
 
-        /* NAVBAR */
-        .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
-        }
+.ee-brand {
+    font-weight: 700;
+    font-size: 22px;
+    color: #e1a400 !important;
+}
 
-        /* HERO */
-        .hero-section {
-            height: 92vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.45)),
-            url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-        }
+.ee-nav-link {
+    color: #333 !important;
+    font-weight: 500;
+    transition: 0.3s;
+}
 
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 700;
-            animation: fadeInUp 1s ease forwards;
-        }
+.ee-nav-link:hover {
+    color: #e1a400 !important;
+}
 
-        .hero-sub {
-            font-size: 1.3rem;
-            animation: fadeInUp 1.4s ease forwards;
-        }
+.btn-ee {
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 6px 14px;
+}
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.btn-ee--outline {
+    border: 1px solid #333;
+    color: #333;
+}
 
-        /* DESTINATION CARDS */
-        .destination-card {
-            transition: 0.3s ease;
-            border-radius: 12px;
-            overflow: hidden;
-            background: white;
-        }
+.btn-ee--outline:hover {
+    background: #333;
+    color: #fff;
+}
 
-        .destination-card img {
-            height: 230px;
-            width: 100%;
-            object-fit: cover;
-        }
+.btn-ee--primary {
+    background: #ffc107;
+    border: none;
+    color: #000;
+}
 
-        .destination-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 26px rgba(0,0,0,0.2);
-        }
+.btn-ee--primary:hover {
+    background: #ffcc33;
+}
+</style>
 
-        /* FEATURES */
-        .feature-box {
-            background: white;
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
-            transition: 0.3s ease;
-        }
+<nav class="navbar navbar-expand-lg ee-navbar shadow-sm py-2">
 
-        .feature-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
+<div class="container">
 
-        /* FOOTER */
-        .footer {
-            background: #111;
-            color: #bfbfbf;
-            padding: 25px 0;
-        }
-    </style>
-<body>  
-<nav class="navbar navbar-expand-lg shadow-sm sticky-top py-3 px-4">
-    
-    <a href="home.jsp" class="navbar-brand fw-bold fs-4 text-warning">ExploreEase</a>
+    <!-- LOGO -->
+    <a class="navbar-brand ee-brand" href="<%=request.getContextPath()%>/home.jsp">
+        <i class="bi bi-compass"></i> ExploreEase
+    </a>
 
-    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
+    <!-- MOBILE TOGGLE -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- NAV LINKS -->
     <div class="collapse navbar-collapse" id="navMenu">
 
         <ul class="navbar-nav mx-auto">
-            <li class="nav-item"><a href="home.jsp" class="nav-link active">Home</a></li>
-            <li class="nav-item"><a href="public_tour.jsp" class="nav-link">Tours</a></li>
-            <li class="nav-item"><a href="public_blog.jsp" class="nav-link">Blog</a></li>
-            <li class="nav-item"><a href="public_contact.jsp" class="nav-link">Contact</a></li>
+
+            <li class="nav-item">
+                <a class="nav-link ee-nav-link" href="<%=request.getContextPath()%>/home.jsp">
+                    Home
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link ee-nav-link" href="<%=request.getContextPath()%>/public_tour.jsp">
+                    Tours
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link ee-nav-link" href="<%=request.getContextPath()%>/public_blog.jsp">
+                    Blog
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link ee-nav-link" href="<%=request.getContextPath()%>/contact.jsp">
+                    Contact
+                </a>
+            </li>
+
         </ul>
 
-        <div class="d-flex">
-            <a href="login.jsp" class="btn btn-outline-dark me-2 px-3">Login</a>
-            <a href="register.jsp" class="btn btn-warning px-3 text-dark fw-semibold">Register</a>
+        <!-- ACTION BUTTONS -->
+        <div class="d-flex gap-2">
+
+            <a href="<%=request.getContextPath()%>/login.jsp"
+               class="btn btn-ee btn-ee--outline">
+                Login
+            </a>
+
+            <a href="<%=request.getContextPath()%>/register.jsp"
+               class="btn btn-ee btn-ee--primary">
+                Register
+            </a>
+
         </div>
 
     </div>
+
+</div>
+
 </nav>
-    
-</body>
+
+<!-- Bootstrap JS (required for toggle) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

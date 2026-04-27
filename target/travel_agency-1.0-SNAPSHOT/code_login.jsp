@@ -1,6 +1,6 @@
 <%@page import="org.mindrot.jbcrypt.BCrypt"%>
 <%@include file="./WEB-INF/includes/db.jsp" %>
-<%@ include file="./WEB-INF/includes/util/jwt_filter.jsp" %>
+<%@ include file="./WEB-INF/includes/util/jwt_util.jsp" %>
 
 <%
   String username = request.getParameter("username");
@@ -26,6 +26,9 @@
       String role  = rs.getString("role");
       String token = generateToken(username, role, id);
       session.setAttribute("authToken", token);
+      session.setAttribute("authUser", username);
+      session.setAttribute("role", role);
+      session.setAttribute("id", id);
 
       if ("Admin".equalsIgnoreCase(role)) {
         response.sendRedirect(request.getContextPath() + "/admin/views/admin_dashboard.jsp");

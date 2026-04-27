@@ -12,6 +12,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Management | Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +39,15 @@
   <div style="overflow-x:auto;">
   <table class="ee-table">
     <thead>
-      <tr><th>ID</th><th>Name</th><th>Email</th><th>Username</th><th>Phone</th><th>Role</th><th>Actions</th></tr>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
     <%
@@ -60,8 +69,12 @@
           <% } %>
         </td>
         <td style="white-space:nowrap;">
-          <a href="<%=request.getContextPath()%>/admin/views/edit_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="display:inline-flex;"><i class="bi bi-pencil"></i></a>
-          <a href="<%=request.getContextPath()%>/admin/controllers/delete_user.jsp?id=<%= rs.getInt("id") %>" onclick="return confirm('Delete this user?');" class="btn-ee btn-ee--danger btn-ee--sm" style="display:inline-flex;margin-left:6px;"><i class="bi bi-trash"></i></a>
+          <a href="<%=request.getContextPath()%>/admin/views/edit_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="display:inline-flex;">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="<%=request.getContextPath()%>/admin/controllers/delete_user_details.jsp?id=<%= rs.getInt("id") %>" onclick="return confirm('Delete this user?');" class="btn-ee btn-ee--danger btn-ee--sm" style="display:inline-flex;margin-left:6px;">
+            <i class="bi bi-trash"></i>
+          </a>
         </td>
       </tr>
     <%
