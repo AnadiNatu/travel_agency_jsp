@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../user_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" %>--%>
 <%
   request.setCharacterEncoding("UTF-8");
   Integer id = (Integer) session.getAttribute("id");

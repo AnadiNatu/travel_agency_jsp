@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../admin_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%--<%@ page contentType="text/html;charset=UTF-8"%>--%>
 <%
   String role = (String) session.getAttribute("role");
   if (role == null || !"Admin".equalsIgnoreCase(role)) {
@@ -72,7 +72,7 @@
           <a href="<%=request.getContextPath()%>/admin/views/edit_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm" style="display:inline-flex;">
             <i class="bi bi-pencil"></i>
           </a>
-          <a href="<%=request.getContextPath()%>/admin/controllers/delete_user_details.jsp?id=<%= rs.getInt("id") %>" onclick="return confirm('Delete this user?');" class="btn-ee btn-ee--danger btn-ee--sm" style="display:inline-flex;margin-left:6px;">
+          <a href="<%=request.getContextPath()%>/admin/controller/delete_user_details.jsp?id=<%= rs.getInt("id") %>" onclick="return confirm('Delete this user?');" class="btn-ee btn-ee--danger btn-ee--sm" style="display:inline-flex;margin-left:6px;">
             <i class="bi bi-trash"></i>
           </a>
         </td>

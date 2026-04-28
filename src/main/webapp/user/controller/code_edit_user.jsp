@@ -1,26 +1,24 @@
 <%@ page import="java.sql.*" %>
-<%@ include file="../auth.jsp" %>
+<%@ include file="../../auth.jsp" %>
 
 <%
     request.setCharacterEncoding("UTF-8");
 
     Integer userId = (Integer) session.getAttribute("id");
     if (userId == null) {
-        response.sendRedirect("../login.jsp?error=invalid_session");
+        response.sendRedirect(request.getContextPath() + "/login.jsp?error=invalid_session");
         return;
     }
 
-    // Receive fields from form
-    String name = request.getParameter("name");
-    String email = request.getParameter("email");
+    String name     = request.getParameter("name");
+    String email    = request.getParameter("email");
     String username = request.getParameter("username");
-    String phone = request.getParameter("phone_number");
-    String dob = request.getParameter("dob");
-    String age = request.getParameter("age");
+    String phone    = request.getParameter("phone_number");
+    String dob      = request.getParameter("dob");
+    String age      = request.getParameter("age");
 
-    // Basic validation
     if (name == null || email == null || username == null) {
-        response.sendRedirect("edit_user_details.jsp?error=missing");
+        response.sendRedirect(request.getContextPath() + "/user/views/edit_user_details.jsp?error=missing");
         return;
     }
 
@@ -45,10 +43,9 @@
         ps.close();
         con.close();
 
-        // Update session variables
         session.setAttribute("authUser", username);
 
-        response.sendRedirect("user_dashboard.jsp?updated=success");
+        response.sendRedirect(request.getContextPath() + "/user/views/user_dashboard.jsp?updated=success");
 
     } catch (Exception e) {
         out.print("<div style='color:red;padding:20px;'>Error updating user: " + e.getMessage() + "</div>");

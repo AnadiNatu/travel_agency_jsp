@@ -1,32 +1,28 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Code Users Details</title>
-    </head>
-    <body>
-        <h1>Code Users Details</h1>
-    </body>
-</html>
-
 <%@page import="java.sql.*"%>
-<%@include file="../auth.jsp"%>
+<%@ include file="../../auth.jsp"%>
 
 <!DOCTYPE html>
 <html>
 <head>
 <title>User Details | Admin</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/global.css">
 </head>
 
-<body class="p-4">
+<body>
 
-<h3 class="text-warning fw-bold">Registered Users</h3>
+<%@ include file="../admin_navbar.jsp" %>
+
+<div class="admin-content">
+<h3 style="color:var(--ocean);">Registered Users</h3>
 <hr>
 
-<table class="table table-bordered table-striped">
-<thead class="table-warning">
+<div style="overflow-x:auto;">
+<table class="ee-table">
+<thead>
 <tr>
     <th>ID</th>
     <th>Name</th>
@@ -55,10 +51,9 @@ try {
     <td><%= rs.getString("username") %></td>
     <td><%= rs.getString("email") %></td>
     <td><%= rs.getString("phone_number") %></td>
-
     <td>
-        <a href="edit_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn btn-sm btn-primary">Edit</a>
-        <a href="delete_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn btn-sm btn-danger">Delete</a>
+        <a href="<%=request.getContextPath()%>/admin/views/edit_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm">Edit</a>
+        <a href="<%=request.getContextPath()%>/admin/controller/delete_user_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--danger btn-ee--sm">Delete</a>
     </td>
 </tr>
 
@@ -69,12 +64,15 @@ try {
     con.close();
 
 } catch(Exception e) {
-    out.print("<tr><td colspan='7' class='text-danger'>Error: "+e.getMessage()+"</td></tr>");
+    out.print("<tr><td colspan='6' class='text-danger'>Error: "+e.getMessage()+"</td></tr>");
 }
 %>
 
 </tbody>
 </table>
+</div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

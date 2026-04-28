@@ -1,23 +1,10 @@
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Code Trip Details</title>
-    </head>
-    <body>
-        <h1>Code Trip Details</h1>
-    </body>
-</html>
-
 <%@page import="java.sql.*"%>
-<%@include file="../auth.jsp"%>
+<%@ include file="../../auth.jsp"%>
 
 <%
 if (!"Admin".equalsIgnoreCase((String)session.getAttribute("role"))) {
-    response.sendRedirect("../login.jsp?error=unauthorized");
+    response.sendRedirect(request.getContextPath() + "/login.jsp?error=unauthorized");
     return;
 }
 %>
@@ -26,16 +13,23 @@ if (!"Admin".equalsIgnoreCase((String)session.getAttribute("role"))) {
 <html>
 <head>
 <title>Trip Details | Admin</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/global.css">
 </head>
 
-<body class="p-4">
+<body>
 
-<h3 class="text-warning fw-bold">All Trip Bookings</h3>
+<%@ include file="../admin_navbar.jsp" %>
+
+<div class="admin-content">
+<h3 style="color:var(--ocean);">All Trip Bookings</h3>
 <hr>
 
-<table class="table table-bordered table-striped">
-<thead class="table-warning">
+<div style="overflow-x:auto;">
+<table class="ee-table">
+<thead>
 <tr>
     <th>ID</th>
     <th>User ID</th>
@@ -67,8 +61,8 @@ try {
     <td><%= rs.getString("email") %></td>
     <td><%= rs.getString("status") %></td>
     <td>
-        <a href="edit_booing_details.jsp?id=<%= rs.getInt("id") %>" class="btn btn-sm btn-primary">Edit</a>
-        <a href="delete_trip_details.jsp?id=<%= rs.getInt("id") %>" class="btn btn-sm btn-danger">Delete</a>
+        <a href="<%=request.getContextPath()%>/admin/views/edit_booking_details.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--ocean btn-ee--sm">Edit</a>
+        <a href="<%=request.getContextPath()%>/admin/controller/delete_booking.jsp?id=<%= rs.getInt("id") %>" class="btn-ee btn-ee--danger btn-ee--sm">Delete</a>
     </td>
 </tr>
 
@@ -85,6 +79,9 @@ try {
 
 </tbody>
 </table>
+</div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,13 +2,13 @@
 <%@ include file="../user_service.jsp" %>
 <%--<%@ page contentType="text/html;charset=UTF-8" %>--%>
 <%
-  String loggedInUser = (String) session.getAttribute("authUser");
-  Integer userId = (Integer) session.getAttribute("id");
-  
-  if (loggedInUser == null) {
-    response.sendRedirect(request.getContextPath() + "/login.jsp?error=loginrequired");
-    return;
-  }
+//  String loggedInUser = (String) session.getAttribute("authUser");
+//  Integer userId = (Integer) session.getAttribute("id");
+//  
+//  if (loggedInUser == null) {
+//    response.sendRedirect(request.getContextPath() + "/login.jsp?error=loginrequired");
+//    return;
+//  }
 %>
 <!DOCTYPE html>
 <html lang="en">

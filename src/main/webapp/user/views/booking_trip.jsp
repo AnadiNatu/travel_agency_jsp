@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../user_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" %>--%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,11 +23,11 @@
 <%@ include file="../user_navbar.jsp" %>
 
 <%
-  String tourTitle = request.getParameter("tourTitle");
-  String country   = request.getParameter("country");
-  String city      = request.getParameter("city");
-  String travelDate= request.getParameter("travel_date");
-  boolean isDirect = (tourTitle != null && !tourTitle.isEmpty());
+  String tourTitle  = request.getParameter("tourTitle");
+  String country    = request.getParameter("country");
+  String city       = request.getParameter("city");
+  String travelDate = request.getParameter("travel_date");
+  boolean isDirect  = (tourTitle != null && !tourTitle.isEmpty());
 %>
 
 <div class="container py-5">
@@ -55,7 +55,7 @@
                       data-country="<%= rs.getString("country") %>"
                       data-city="<%= rs.getString("city") %>"
                       data-date="<%= rs.getString("travel_date") %>">
-                <%= rs.getString("tour_title") %> — <%= rs.getString("city") %>
+                <%= rs.getString("tour_title") %> ? <%= rs.getString("city") %>
               </option>
             <%
                 }
@@ -72,10 +72,10 @@
         <span class="ee-section__label">Your Details</span>
         <h4 style="color:white;font-family:'Cormorant Garamond',serif;margin-bottom:1.5rem;">Booking Form</h4>
 
-        <form action="<%=request.getContextPath()%>/user/controllers/code_booking.jsp" method="POST">
-          <input type="hidden" id="tourTitle" name="tourTitle" value="<%= tourTitle!=null?tourTitle:"" %>">
-          <input type="hidden" id="country"   name="country"   value="<%= country!=null?country:"" %>">
-          <input type="hidden" id="city"      name="city"      value="<%= city!=null?city:"" %>">
+        <form action="<%=request.getContextPath()%>/user/controller/code_booking.jsp" method="POST">
+          <input type="hidden" id="tourTitle"   name="tourTitle"   value="<%= tourTitle!=null?tourTitle:"" %>">
+          <input type="hidden" id="country"     name="country"     value="<%= country!=null?country:"" %>">
+          <input type="hidden" id="city"        name="city"        value="<%= city!=null?city:"" %>">
           <input type="hidden" id="travel_date" name="travel_date" value="<%= travelDate!=null?travelDate:"" %>">
 
           <div class="row g-3">

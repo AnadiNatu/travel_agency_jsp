@@ -30,7 +30,7 @@
   </div>
 
   <div style="max-width:680px;background:var(--white);border-radius:var(--radius-md);padding:2.5rem;box-shadow:var(--shadow-md);">
-    <form action="<%=request.getContextPath()%>/admin/controllers/create_trip_action.jsp" method="post" enctype="multipart/form-data">
+    <form action="<%=request.getContextPath()%>/admin/controller/create_trip_action.jsp" method="post" enctype="multipart/form-data">
       <div class="row">
         <div class="col-md-6">
           <div class="ee-form-group">

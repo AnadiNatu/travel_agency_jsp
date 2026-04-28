@@ -1,6 +1,6 @@
 <%@ include file="../../auth.jsp" %>
 <%@ include file="../user_service.jsp" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" %>--%>
 <%
   Integer userId = (Integer) session.getAttribute("id");
   String name = "", email = "";
@@ -47,8 +47,8 @@
     <div class="col-lg-6">
       <div class="glass-card">
         <h5 style="color:var(--gold-light);font-family:'Cormorant Garamond',serif;margin-bottom:1.5rem;">Send a Message</h5>
-        <form action="<%=request.getContextPath()%>/user/controllers/contact_action.jsp" method="POST">
-          <input type="hidden" name="name" value="<%= name %>">
+        <form action="<%=request.getContextPath()%>/user/controller/contact_action.jsp" method="POST">
+          <input type="hidden" name="name"  value="<%= name %>">
           <input type="hidden" name="email" value="<%= email %>">
           <div class="ee-form-group">
             <label style="color:rgba(255,255,255,0.6);">Your Name</label>
