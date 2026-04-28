@@ -1,4 +1,4 @@
-<%@ include file="./WEB-INF/includes/util/jwt_filter.jsp" %>
+<%@ include file="/WEB-INF/includes/util/jwt_filter.jsp" %>
 
 <%
 String loggedUser = (String) session.getAttribute("authUser");
